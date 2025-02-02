@@ -1,0 +1,14 @@
+#  virt env
+/.venv/
+
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+
+
+# DotEnv configuration
+/.env
+
+
+# log files
+*.log
