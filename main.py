@@ -2,6 +2,7 @@ from collections import defaultdict
 
 from src.utils.logger import get_logger
 from src.reddit.reddit_scraper import RedditScraper
+from src.kafka.producer import Producer
 
 
 def main():
@@ -11,6 +12,8 @@ def main():
 
     subreddits = scraper.subreddits
     reddit_client = scraper.reddit_client
+
+    producer = Producer(bootstrap_servers='localhost:9092')
     
     last_post_info = defaultdict(lambda: None)
     idx = 0
@@ -38,7 +41,9 @@ def main():
                 
                 post_data["comments"] = comments_data
 
-                # publish_to_kafka(post_data, topic="RedditData")
+                is_produced = producer.publish_to_kafka(data=post_data, topic="RedditData")
+                if not is_produced:
+                    logger.warning(f"Unpublished data, post: {post}. Check kafka setup!")
 
                 last_post_info[subreddit] = after_post
                 idx = (idx +1) % len(subreddits)

@@ -66,7 +66,7 @@ class RedditScraper:
             self.logger.error(f"Problem occured while fetching posts: {e}")
             return
 
-    def fetch_comments(self, post, num_comments = 30) -> Optional[list[str]]:   # -> tuple[dict[str, str], str]
+    def fetch_comments(self, post, num_comments = 30) -> Optional[list[str]]:
         try:
             post.comment_sort = "top"
             post.comments.replace_more(limit=0)
