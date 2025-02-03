@@ -9,6 +9,8 @@ __pycache__/
 # DotEnv configuration
 /.env
 
+# testing files
+/test/
 
 # log files
 *.log

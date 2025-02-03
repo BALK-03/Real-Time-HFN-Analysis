@@ -3,38 +3,35 @@ import logging
 from logging.handlers import RotatingFileHandler
 
 
-def setup_logging(log_file_path: str, file_log_level: int = logging.ERROR, console_log_level: int = logging.INFO) -> None:
-    """
-    Set up a centralized logging configuration with rotating file handler.
+def get_logger(name: str, error_log_file: str = "logs/app_error.log", info_log_file: str = "logs/app_info.log"):
+    os.makedirs(os.path.dirname(error_log_file), exist_ok=True)
+
+    logger = logging.getLogger(name)
     
-    :param log_file_path: Path to the log file
-    :param file_log_level: Logging level for file handler
-    :param console_log_level: Logging level for console handler
-    """
-    os.makedirs(os.path.dirname(log_file_path), exist_ok=True)
+    # Avoid duplicate handlers
+    if logger.hasHandlers():
+        return logger
 
-    logger = logging.getLogger()
-    logger.setLevel(logging.INFO)
-
-    logger.handlers.clear()
+    logger.setLevel(logging.DEBUG)
 
     formatter = logging.Formatter(
         "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
     )
 
-    file_handler = RotatingFileHandler(
-        log_file_path, 
-        maxBytes=10*1024*1024,
-        backupCount=5
-    )
-    file_handler.setFormatter(formatter)
-    file_handler.setLevel(file_log_level)
+    error_handler = RotatingFileHandler(error_log_file, maxBytes=10*1024*1024, backupCount=5)
+    error_handler.setFormatter(formatter)
+    error_handler.setLevel(logging.ERROR)
+
+    info_handler = RotatingFileHandler(info_log_file, maxBytes=10*1024*1024, backupCount=5)
+    info_handler.setFormatter(formatter)
+    info_handler.setLevel(logging.DEBUG)
 
     console_handler = logging.StreamHandler()
     console_handler.setFormatter(formatter)
-    console_handler.setLevel(console_log_level)
+    console_handler.setLevel(logging.INFO)
 
-    logger.addHandler(file_handler)
+    logger.addHandler(error_handler)
+    logger.addHandler(info_handler)
     logger.addHandler(console_handler)
 
     return logger
