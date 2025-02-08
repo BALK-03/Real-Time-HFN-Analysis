@@ -7,7 +7,7 @@ __pycache__/
 
 
 # DotEnv configuration
-/.env
+/config/.env
 
 # testing files
 /test/

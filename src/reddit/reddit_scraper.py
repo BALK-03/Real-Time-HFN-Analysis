@@ -2,7 +2,8 @@ import os, sys
 import praw
 import yaml
 from typing import Optional, Dict, List
-from dotenv import DotEnv
+from dotenv import load_dotenv
+
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))
 from src.utils.logger import get_logger
@@ -29,7 +30,7 @@ class RedditScraper:
 
     def reddit_authentication(self) -> praw.Reddit:
         try:
-            DotEnv('.env')
+            load_dotenv('./config/.env')
             return praw.Reddit(
                 username=os.getenv('REDDIT_USERNAME'),
                 password=os.getenv('REDDIT_PASSWORD'),

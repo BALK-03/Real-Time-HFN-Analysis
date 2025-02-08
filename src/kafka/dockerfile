@@ -1,0 +1,8 @@
+FROM python:3.9-slim
+
+WORKDIR /app
+COPY . /app/
+
+RUN pip install kafka-python==2.0.2 praw==7.8.1 python-dotenv==0.19.2 PyYAML==6.0.2
+
+CMD ["python", "src/kafka/producer.py"]

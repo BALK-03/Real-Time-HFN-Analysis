@@ -1,0 +1,8 @@
+/template.env
+/requirements.txt
+/test/
+/logs/
+/.venv/
+/__pycache__/
+/main.py
+/docker-compose.yml
