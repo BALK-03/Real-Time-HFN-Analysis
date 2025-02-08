@@ -15,7 +15,6 @@ services:
       - RedditAnalysis
 
 
-
   kafka:
     image: confluentinc/cp-kafka:7.3.2
     hostname: kafka
@@ -63,6 +62,7 @@ services:
       - spark-master
     networks:
       - RedditAnalysis
+
 
   kafka-producer:
     build:

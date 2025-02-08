@@ -1,6 +1,6 @@
 import os, sys
 import json
-from typing import Dict, Optional
+from typing import Dict, Tuple
 from kafka import KafkaProducer
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))
@@ -8,9 +8,10 @@ from src.utils.logger import get_logger
 
 
 class Producer:
-    def __init__(self, bootstrap_servers: Optional[str] = 'kafka:19092'):
+    def __init__(self, bootstrap_servers: str = 'kafka:19092', api_version: Tuple = (2, 6, 0)):
         self.logger = get_logger(__name__)
         self.bootstrap_servers = bootstrap_servers
+        self.api_version = api_version
         self.kafka_producer = None
         # Kafka producer configuration
         self.setup_producer()
@@ -19,7 +20,7 @@ class Producer:
         try:
             self.kafka_producer = KafkaProducer(
                 bootstrap_servers=self.bootstrap_servers,
-                api_version=(2, 6, 0),
+                api_version=self.api_version,
                 value_serializer=lambda v: json.dumps(v).encode('utf-8')
             )
         except Exception as e:
@@ -53,9 +54,9 @@ class Producer:
 
 if __name__ == "__main__":
     import os, sys
+    from collections import defaultdict
     sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))
     from src.reddit.reddit_scraper import RedditScraper
-    from collections import defaultdict
 
     logger = get_logger(__name__ + "/file_main")
     scraper = RedditScraper()
@@ -98,6 +99,6 @@ if __name__ == "__main__":
                 last_post_info[subreddit] = after_post
                 idx = (idx +1) % len(subreddits)
         except Exception as e:
-            logger.error(f"Problem occured while fetching or publishing data from subreddit {subreddit}: {e}")
+            logger.warning(f"Problem occured while fetching or publishing data from subreddit {subreddit}: {e}")
             idx = (idx +1) % len(subreddits)
             continue
