@@ -7,30 +7,22 @@ from dotenv import load_dotenv
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))
 from src.utils.logger import get_logger
+from src.utils.get_config import get_config
 
 
 class RedditScraper:
     CONFIG_FILE = "./config/reddit_config.yml"
+    ENV_FILE = "./config/.env"
 
     def __init__(self):
         self.logger = get_logger(__name__)
         self.reddit_client = self.reddit_authentication()
         self.logger.info(f"Authenticated succefully!")
-        self.subreddits = self.get_subreddits(reddit_config=RedditScraper.CONFIG_FILE)
-
-    def get_subreddits(self, reddit_config) -> List[str]:
-        try:
-            with open(reddit_config, 'r')  as file:
-                config = yaml.safe_load(file)
-            subreddits = config.get('subreddits')
-            return subreddits
-        except Exception as e:
-            self.logger.error(f"Probelm occured while reading from {reddit_config} file: {e}")
-            raise
+        self.subreddits = get_config(config_file=RedditScraper.CONFIG_FILE, target_config='subreddits')
 
     def reddit_authentication(self) -> praw.Reddit:
         try:
-            load_dotenv('./config/.env')
+            load_dotenv(RedditScraper.ENV_FILE)
             return praw.Reddit(
                 username=os.getenv('REDDIT_USERNAME'),
                 password=os.getenv('REDDIT_PASSWORD'),
@@ -48,7 +40,7 @@ class RedditScraper:
     def fetch_posts(self, subreddit, num_posts=1, last_post=None) -> Optional[tuple[Dict[str, str], str]]:
         try:
             posts = list(subreddit.hot(limit=num_posts, params={'after': last_post}))
-            # No more available posts to fetch
+            # If no more available posts to fetch
             if not posts:
                 return
             for post in posts:

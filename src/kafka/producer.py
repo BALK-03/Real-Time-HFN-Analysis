@@ -1,7 +1,8 @@
 import os, sys
 import json
-from typing import Dict, Tuple
+from typing import Dict, Tuple, Optional
 from kafka import KafkaProducer
+import yaml
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))
 from src.utils.logger import get_logger
@@ -57,14 +58,21 @@ if __name__ == "__main__":
     from collections import defaultdict
     sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))
     from src.reddit.reddit_scraper import RedditScraper
+    from src.utils.get_config import get_config
 
     logger = get_logger(__name__ + "/file_main")
+    BROKER = get_config('./config/kafka_config.yml', 'BROKER')
+    TOPIC = get_config('./config/kafka_config.yml', 'TOPIC')
+    API_VERSION = tuple(get_config('./config/kafka_config.yml', 'API_VERSION'))
+
     scraper = RedditScraper()
 
     subreddits = scraper.subreddits
     reddit_client = scraper.reddit_client
-
-    producer = Producer(bootstrap_servers='kafka:19092')
+    producer = Producer(
+        bootstrap_servers=BROKER,
+        api_version=API_VERSION
+        )
     
     last_post_info = defaultdict(lambda: None)
     idx = 0
@@ -92,7 +100,7 @@ if __name__ == "__main__":
                 
                 post_data["comments"] = comments_data
 
-                is_produced = producer.publish_to_kafka(data=post_data, topic="RedditData")
+                is_produced = producer.publish_to_kafka(data=post_data, topic=TOPIC)
                 if not is_produced:
                     logger.warning(f"Unpublished data, post: {post}. Check kafka setup!")
 

@@ -1,0 +1,6 @@
+BROKER: "kafka:19092"
+TOPIC: "RedditData"
+API_VERSION:
+  - 2
+  - 6
+  - 0
