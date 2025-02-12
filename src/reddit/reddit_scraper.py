@@ -1,7 +1,6 @@
 import os, sys
 import praw
-import yaml
-from typing import Optional, Dict, List
+from typing import Optional, Dict
 from dotenv import load_dotenv
 
 
