@@ -85,5 +85,15 @@ services:
       - RedditAnalysis
 
 
+  bert:
+    build:
+      context: .
+      dockerfile: ./src/bert/Dockerfile
+    container_name: bert_endpoint
+    ports:
+      - "8000:8000"
+    networks:
+      - RedditAnalysis
+
 networks:
   RedditAnalysis:

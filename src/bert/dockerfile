@@ -1,0 +1,14 @@
+FROM tiangolo/uvicorn-gunicorn-fastapi:python3.9
+
+WORKDIR /app
+
+COPY ./src/bert /app/src/bert
+COPY ./models /app/models
+COPY ./config/bert_config.yml /app/config/bert_config.yml
+COPY ./src/utils /app/src/utils
+
+RUN pip install --no-cache-dir --upgrade -r /app/src/bert/requirements.txt
+
+EXPOSE 8000
+
+CMD ["uvicorn", "src.bert.bert_api:app", "--host", "0.0.0.0", "--port", "8000"]
