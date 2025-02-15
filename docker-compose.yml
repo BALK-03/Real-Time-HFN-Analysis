@@ -45,6 +45,7 @@ services:
 
   spark-master:
     image: bitnami/spark:latest
+    hostname: spark-master
     container_name: spark-master
     command: ["spark-class", "org.apache.spark.deploy.master.Master"]
     ports:
@@ -56,6 +57,7 @@ services:
 
   spark-worker:
     image: bitnami/spark:latest
+    hostname: spark-worker
     container_name: spark-worker
     command: ["spark-class", "org.apache.spark.deploy.worker.Worker", "spark://spark-master:7077"]
     depends_on:
@@ -68,6 +70,7 @@ services:
     build:
       context: .
       dockerfile: ./src/kafka/Dockerfile
+    hostname: kafka-producer
     container_name: kafka-producer
     depends_on:
       - kafka
@@ -77,6 +80,7 @@ services:
 
   spark-streaming:
     build: ./src/spark
+    hostname: spark-streaming
     container_name: spark-streaming
     depends_on:
       - spark-master
@@ -89,7 +93,8 @@ services:
     build:
       context: .
       dockerfile: ./src/bert/Dockerfile
-    container_name: bert_endpoint
+    hostname: bert
+    container_name: bert
     ports:
       - "8000:8000"
     networks:
