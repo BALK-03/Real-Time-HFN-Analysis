@@ -24,8 +24,8 @@ class CassandraManager:
 
         self.session.execute(CassandraQueries.CREATE_TABLE)
 
-    def insert_prediction(self, text: str, prediction: str):
-        self.session.execute(CassandraQueries.INSERT_PREDICTION, (uuid.uuid4(), text, prediction))
+    def insert_prediction(self, text: str, prediction: str, subreddit: str):
+        self.session.execute(CassandraQueries.INSERT_PREDICTION, (uuid.uuid4(), text, prediction, subreddit))
 
     def close(self):
         if self.cluster:

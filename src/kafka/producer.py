@@ -78,8 +78,8 @@ if __name__ == "__main__":
     idx = 0
     while True:
         try:
-            subreddit = subreddits[idx]
-            subreddit = reddit_client.subreddit(subreddit)
+            subreddit_name = subreddits[idx]
+            subreddit = reddit_client.subreddit(subreddit_name)
 
             post_data, after_post = scraper.fetch_posts(
                 subreddit = subreddit,
@@ -98,6 +98,7 @@ if __name__ == "__main__":
                     num_comments = 20
                 )
                 
+                post_data["subreddit"] = subreddit_name                
                 post_data["comments"] = comments_data
 
                 is_produced = producer.publish_to_kafka(data=post_data, topic=TOPIC)

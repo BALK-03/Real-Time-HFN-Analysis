@@ -8,8 +8,9 @@ class CassandraQueries:
     CREATE TABLE IF NOT EXISTS prediction_results (
         id UUID PRIMARY KEY,
         text TEXT,
-        prediction TEXT
+        prediction TEXT,
+        subreddit TEXT
     );
     """
 
-    INSERT_PREDICTION = "INSERT INTO prediction_results (id, text, prediction) VALUES (%s, %s, %s);"
+    INSERT_PREDICTION = "INSERT INTO prediction_results (id, text, prediction, subreddit) VALUES (%s, %s, %s, %s);"

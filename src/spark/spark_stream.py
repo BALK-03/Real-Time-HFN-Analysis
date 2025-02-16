@@ -39,10 +39,11 @@ def process_batch(df, batch_id):
         rows = df.collect()
         for row in rows:
             post_text = row.post_body
+            subreddit = row.subreddit
             if post_text:
                 try:
                     post_pred = bert_predict(post_text, URL=BERT_URL)
-                    cassandra.insert_prediction(post_text, post_pred)
+                    cassandra.insert_prediction(post_text, post_pred, subreddit)
                 except Exception as e:
                     logger.warning(f"Error processing post text: {e}")
 
@@ -51,7 +52,7 @@ def process_batch(df, batch_id):
                     if comment:
                         try:
                             comment_pred = bert_predict(comment, URL=BERT_URL)
-                            cassandra.insert_prediction(comment, comment_pred)
+                            cassandra.insert_prediction(comment, comment_pred, subreddit)
                         except Exception as e:
                             logger.warning(f"Error processing comment: {e}")
                             continue
@@ -72,6 +73,7 @@ def start_spark():
         .add("post_url", StringType()) \
         .add("created_utc", StringType()) \
         .add("post_body", StringType()) \
+        .add("subreddit", StringType()) \
         .add("comments", ArrayType(StringType()))
 
     df = spark.readStream \
