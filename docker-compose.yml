@@ -79,7 +79,9 @@ services:
 
 
   spark-streaming:
-    build: ./src/spark
+    build:
+      context: .
+      dockerfile: ./src/spark/Dockerfile
     hostname: spark-streaming
     container_name: spark-streaming
     depends_on:
@@ -100,5 +102,25 @@ services:
     networks:
       - RedditAnalysis
 
+
+  cassandra:
+    image: cassandra:latest
+    hostname: cassandra
+    container_name: cassandra
+    ports:
+      - "9042:9042"
+    environment:
+      - CASSANDRA_USER=admin
+      - CASSANDRA_PASSWORD=admin
+    volumes:
+      - cassandra-data:/var/lib/cassandra
+    networks:
+      - RedditAnalysis
+
+
 networks:
   RedditAnalysis:
+
+
+volumes:
+  cassandra-data:

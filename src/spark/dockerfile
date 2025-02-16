@@ -1,6 +1,15 @@
 FROM bitnami/spark:latest
 
 WORKDIR /opt/spark/app
-COPY spark_stream.py .
 
-CMD ["spark-submit", "--master", "spark://spark-master:7077", "--packages", "org.apache.spark:spark-sql-kafka-0-10_2.12:3.3.1", "spark_stream.py"]
+COPY ./config /opt/spark/app/config
+COPY ./src/spark /opt/spark/app/src/spark
+COPY ./src/utils /opt/spark/app/src/utils
+COPY ./src/cassandra /opt/spark/app/src/cassandra
+
+RUN pip install --no-cache-dir --upgrade -r /opt/spark/app/src/spark/requirements.txt
+
+CMD ["spark-submit", \
+    "--master", "spark://spark-master:7077", \
+    "--packages", "org.apache.spark:spark-sql-kafka-0-10_2.12:3.3.1", \
+    "/opt/spark/app/src/spark/spark_stream.py"]

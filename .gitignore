@@ -13,4 +13,4 @@ __pycache__/
 /test/
 
 # log files
-*.log
+/logs/
