@@ -39,4 +39,8 @@ DistilBERT, a lightweight transformer model, is used for sentiment analysis due 
 
 
 ## Grafana Dashboard
+During approximately one hour of real-time streaming data, from 15:30 to 16:40, we observed that a total of 27,732 comments were processed in this experiment. These comments were classified as follows:
+- 956 expressed fear toward AI.
+- 2,363 expressed hope in AI.
+- 18,413 were neutral.
 ![Image](https://github.com/user-attachments/assets/cc4fb370-16d4-4839-aa77-d91190acffe6)
