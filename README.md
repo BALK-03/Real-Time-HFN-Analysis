@@ -1,4 +1,4 @@
-# Real-Time AI Sentiment Analysis  
+# Real-Time Sentiment Analysis  
 
 ## Project Overview  
 This project aims to perform real-time analysis of public sentiment toward AI. The primary sentiment categories we focused on are **Hope**, **Fear**, and **Neutral**.
@@ -15,6 +15,9 @@ To run the project, follow these steps:
    ```bash
    docker-compose up --build -d
    ```
+
+## Troubleshooting
+- **cassandra.cluster.NoHostAvailable**: If you encounter this kind of error while starting the spark-streaming container, just restart it again. It's just waiting for Cassandra to be up and running.
 
 ## DistilBERT Model  
 DistilBERT, a lightweight transformer model, is used for sentiment analysis due to its efficiency and multi-encoder architecture. However, the primary goal of this project is to build a **scalable and efficient data streaming infrastructure** rather than focusing on model performance. The dataset used for fine-tuning the model is not of high quality. All data is stored in the `data/` folder.
